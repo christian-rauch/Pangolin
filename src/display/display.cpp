@@ -155,7 +155,7 @@ WindowInterface& CreateWindowAndBind(std::string window_title, int w, int h, con
     context->is_high_res = win_uri.Get(PARAM_HIGHRES,false);
     context->MakeCurrent();
     context->ProcessEvents();
-    glewInit();
+    gladLoadGL();
 
     return *context;
 }

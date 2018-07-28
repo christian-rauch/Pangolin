@@ -1,7 +1,5 @@
 #include <iostream>
 
-#include <GL/glew.h>
-
 #include <pangolin/pangolin.h>
 #include <pangolin/gl/glcuda.h>
 #include <pangolin/gl/glvbo.h>
@@ -24,10 +22,9 @@ int main( int /*argc*/, char* argv[] )
 //  cudaGLSetGLDevice(0);
 
   pangolin::CreateWindowAndBind("Main",640,480);
-  glewInit();
-  
-  // 3D Mouse handler requires depth testing to be enabled  
-  glEnable(GL_DEPTH_TEST);  
+
+  // 3D Mouse handler requires depth testing to be enabled
+  glEnable(GL_DEPTH_TEST);
 
   // Create vertex and colour buffer objects and register them with CUDA
   GlBufferCudaPtr vertex_array(

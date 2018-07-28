@@ -1004,9 +1004,6 @@ std::unique_ptr<WindowInterface> CreateWaylandWindowAndBind(const std::string wi
     try{
         std::unique_ptr<WaylandDisplay> newdisplay = std::unique_ptr<WaylandDisplay>(new WaylandDisplay(w, h, window_title));
 
-        // glewInit() fails with SIGSEGV for glew < 2.0 since it links to GLX
-        if(atoi((char*)glewGetString(GLEW_VERSION_MAJOR))<2)
-            return nullptr;
 
         WaylandWindow* win = new WaylandWindow(w, h, std::move(newdisplay));
 
