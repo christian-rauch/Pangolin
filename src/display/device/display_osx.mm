@@ -155,8 +155,6 @@ OsxWindow::OsxWindow(
 
     [PangolinNSApplication run_step];
 
-    glewInit();
-
     FixOsxFocus();
 }
 
