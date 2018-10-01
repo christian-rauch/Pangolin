@@ -81,6 +81,15 @@ inline void _CheckEGLDieOnError( const char *sFile, const int nLine )
 }
 }
 
+namespace pangolin {
+std::string getEGLErrorString() {
+    const EGLint eglError = eglGetError();
+    std::ostringstream error_stream;
+    error_stream << egl_error_msg.at(eglError) << " (" << std::hex << eglError << ")";
+    return error_stream.str();
+}
+}
+
 namespace pangolin
 {
 
@@ -157,17 +166,17 @@ X11GlContext::X11GlContext(std::shared_ptr<X11Display>& xdisplay) : display(xdis
 
     ok = eglBindAPI(EGL_OPENGL_API);
     if (!ok)
-        error_fatal("eglBindAPI(0x%x) failed", EGL_OPENGL_API);
+        error_fatal("eglBindAPI(0x%x) failed: %s", EGL_OPENGL_API, getEGLErrorString().c_str());
     CheckEGLDieOnError();
 
     egl_display = eglGetDisplay(xdisplay->display);
     if (egl_display == EGL_NO_DISPLAY)
-        error_fatal("eglGetDisplay() failed");
+        error_fatal("eglGetDisplay() failed: %s", getEGLErrorString().c_str());
     CheckEGLDieOnError();
 
     ok = eglInitialize(egl_display, &ignore, &ignore);
     if (!ok)
-        error_fatal("eglInitialize() failed");
+        error_fatal("eglInitialize() failed: %s", getEGLErrorString().c_str());
     CheckEGLDieOnError();
 
 //    std::cout << "EGL version: " << eglQueryString(egl_display, EGL_VERSION) << std::endl;
@@ -206,9 +215,9 @@ X11GlContext::X11GlContext(std::shared_ptr<X11Display>& xdisplay) : display(xdis
         configs_size, // num requested configs
         &num_configs); // num returned configs
     if (!ok)
-        error_fatal("eglChooseConfig() failed");
+        error_fatal("eglChooseConfig() failed: %s", getEGLErrorString().c_str());
     if (num_configs == 0)
-        error_fatal("failed to find suitable EGLConfig");
+        error_fatal("failed to find suitable EGLConfig: %s", getEGLErrorString().c_str());
     egl_config = configs[0];
     delete [] configs;
     CheckEGLDieOnError();
@@ -223,7 +232,7 @@ X11GlContext::X11GlContext(std::shared_ptr<X11Display>& xdisplay) : display(xdis
             EGL_NO_CONTEXT,
             egl_context_attribs);
     if (!egl_context)
-        error_fatal("eglCreateContext() failed");
+        error_fatal("eglCreateContext() failed: %s", getEGLErrorString().c_str());
     CheckEGLDieOnError();
 
     // Check if surface is double buffered.
@@ -234,7 +243,7 @@ X11GlContext::X11GlContext(std::shared_ptr<X11Display>& xdisplay) : display(xdis
         EGL_RENDER_BUFFER,
         &render_buffer);
     if (!ok)
-        error_fatal("eglQueyContext(EGL_RENDER_BUFFER) failed");
+        error_fatal("eglQueyContext(EGL_RENDER_BUFFER) failed: %s", getEGLErrorString().c_str());
     if (render_buffer == EGL_SINGLE_BUFFER)
         printf("warn: EGL surface is single buffered\n");
     CheckEGLDieOnError();
@@ -261,7 +270,7 @@ X11Window::X11Window(
     if(eglGetConfigAttrib(glcontext->egl_display, glcontext->egl_config,
                           EGL_NATIVE_VISUAL_ID, &vid)!=EGL_TRUE)
     {
-        error_fatal("eglGetConfigAttrib() failed");
+        error_fatal("eglGetConfigAttrib() failed: %s", getEGLErrorString().c_str());
     }
     CheckEGLDieOnError();
 
@@ -316,7 +325,7 @@ X11Window::X11Window(
             win,
             egl_surface_attribs);
     if (!glcontext->egl_surface)
-        error_fatal("eglCreateWindowSurface() failed");
+        error_fatal("eglCreateWindowSurface() failed: %s", getEGLErrorString().c_str());
     CheckEGLDieOnError();
 }
 
