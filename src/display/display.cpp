@@ -216,19 +216,27 @@ void DestroyWindow(const std::string& name)
 
 WindowInterface& BindToContext(std::string name)
 {
+    CheckGlDieOnError();
     std::unique_lock<std::recursive_mutex> l(contexts_mutex);
 
     // N.B. context is modified prior to invoking MakeCurrent so that
     // state management callbacks (such as Resize()) can be correctly
     // processed.
+    CheckGlDieOnError();
     PangolinGl *context_to_bind = FindContext(name);
+    CheckGlDieOnError();
     if( !context_to_bind )
     {
+        CheckGlDieOnError();
         std::shared_ptr<PangolinGl> newcontext(new PangolinGl());
+        CheckGlDieOnError();
         RegisterNewContext(name, newcontext);
+        CheckGlDieOnError();
         return *(newcontext.get());
     }else{
+        CheckGlDieOnError();
         context_to_bind->MakeCurrent();
+        CheckGlDieOnError();
         return *context_to_bind;
     }
 }

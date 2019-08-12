@@ -312,7 +312,9 @@ X11Window::~X11Window()
 
 void X11Window::MakeCurrent(GLXContext ctx)
 {
+    CheckGlDieOnError();
     glXMakeCurrent( display->display, win, ctx );
+    CheckGlDieOnError();
     context = this;
 }
 

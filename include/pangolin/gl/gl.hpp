@@ -543,7 +543,9 @@ inline GlFramebuffer::~GlFramebuffer()
 inline GlFramebuffer::GlFramebuffer(GlTexture& colour, GlRenderBuffer& depth)
     : attachments(0)
 {
+    CheckGlDieOnError();
     glGenFramebuffersEXT(1, &fbid);
+    CheckGlDieOnError();
     AttachColour(colour);
     AttachDepth(depth);
     CheckGlDieOnError();
@@ -552,7 +554,9 @@ inline GlFramebuffer::GlFramebuffer(GlTexture& colour, GlRenderBuffer& depth)
 inline GlFramebuffer::GlFramebuffer(GlTexture& colour0, GlTexture& colour1, GlRenderBuffer& depth)
     : attachments(0)
 {
+    CheckGlDieOnError();
     glGenFramebuffersEXT(1, &fbid);
+    CheckGlDieOnError();
     AttachColour(colour0);
     AttachColour(colour1);
     AttachDepth(depth);
@@ -562,7 +566,9 @@ inline GlFramebuffer::GlFramebuffer(GlTexture& colour0, GlTexture& colour1, GlRe
 inline GlFramebuffer::GlFramebuffer(GlTexture& colour0, GlTexture& colour1, GlTexture& colour2, GlRenderBuffer& depth)
     : attachments(0)
 {
+    CheckGlDieOnError();
     glGenFramebuffersEXT(1, &fbid);
+    CheckGlDieOnError();
     AttachColour(colour0);
     AttachColour(colour1);
     AttachColour(colour2);
@@ -573,7 +579,9 @@ inline GlFramebuffer::GlFramebuffer(GlTexture& colour0, GlTexture& colour1, GlTe
 inline GlFramebuffer::GlFramebuffer(GlTexture& colour0, GlTexture& colour1, GlTexture& colour2, GlTexture& colour3, GlRenderBuffer& depth)
     : attachments(0)
 {
+    CheckGlDieOnError();
     glGenFramebuffersEXT(1, &fbid);
+    CheckGlDieOnError();
     AttachColour(colour0);
     AttachColour(colour1);
     AttachColour(colour2);
@@ -608,11 +616,15 @@ inline void GlFramebuffer::Unbind() const
 
 inline GLenum GlFramebuffer::AttachColour(GlTexture& tex )
 {
+    CheckGlDieOnError();
     if(!fbid) Reinitialise();
+    CheckGlDieOnError();
 
     const GLenum color_attachment = GL_COLOR_ATTACHMENT0_EXT + attachments;
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fbid);
+    CheckGlDieOnError();
     glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, color_attachment, GL_TEXTURE_2D, tex.tid, 0);
+    CheckGlDieOnError();
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     attachments++;
     CheckGlDieOnError();

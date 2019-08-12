@@ -83,7 +83,9 @@ void SaveViewFromFbo(std::string prefix, View& view, float scale)
     // Create FBO
     GlTexture color(w,h);
     GlRenderBuffer depth(w,h);
+    CheckGlDieOnError();
     GlFramebuffer fbo(color, depth);
+    CheckGlDieOnError();
 
     // Render into FBO
     fbo.Bind();
