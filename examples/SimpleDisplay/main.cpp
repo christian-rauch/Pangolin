@@ -86,6 +86,14 @@ int main(/*int argc, char* argv[]*/)
   // Demonstration of how we can register a keyboard hook to trigger a method
   pangolin::RegisterKeyPressCallback(pangolin::PANGO_CTRL + 'r', SampleMethod);
 
+  const GLubyte* vendor = glGetString(GL_VENDOR);
+  const GLubyte* renderer = glGetString(GL_RENDERER);
+  const GLubyte* version = glGetString(GL_VERSION);
+
+  std::cout << "vendor: " << std::string((char*)vendor) << std::endl;
+  std::cout << "renderer: " << std::string((char*)renderer) << std::endl;
+  std::cout << "version: " << std::string((char*)version) << std::endl;
+
   // Default hooks for exiting (Esc) and fullscreen (tab).
   while( !pangolin::ShouldQuit() )
   {
