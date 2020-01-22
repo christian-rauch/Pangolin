@@ -904,7 +904,7 @@ WaylandDisplay::WaylandDisplay(const int width, const int height, const std::str
     wl_display_sync(wdisplay);
 
     // construct window decoration
-    const pangolin::Colour grey(0.5f, 0.5f, 0.5f, 0.5f);
+    const pangolin::Colour grey(0.5f, 0.5f, 0.5f);
     decoration = std::unique_ptr<Decoration>(new Decoration(5, 20, grey, wcompositor, wsubcompositor, wsurface, egl_display, egl_configs[0]));
     decoration->create();
     decoration->resize(width, height);
