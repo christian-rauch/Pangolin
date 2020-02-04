@@ -11,4 +11,5 @@ endif()
 
 SET( Pangolin_LIBRARIES    @LIBRARY_NAME@ )
 SET( Pangolin_LIBRARY      @LIBRARY_NAME@ )
+SET( Pangolin_LIBRARY_DIR  @LIBRARY_DIR@ )
 SET( Pangolin_CMAKEMODULES @CMAKE_CURRENT_SOURCE_DIR@/../CMakeModules )

@@ -635,6 +635,9 @@ target_include_directories(${LIBRARY_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SO
                                                   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
                                                   $<INSTALL_INTERFACE:${INSTALL_INCLUDE_DIR}>)
 target_link_libraries(${LIBRARY_NAME} PUBLIC ${LINK_LIBS})
+set_target_properties(${LIBRARY_NAME} PROPERTIES
+    LINK_DIRECTORIES $<INSTALL_INTERFACE:${CMAKE_INSTALL_PREFIX}/lib>)
+set(LIBRARY_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 
 ## Generate symbol export helper header on MSVC
 IF(MSVC)
