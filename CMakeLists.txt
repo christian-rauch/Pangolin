@@ -71,6 +71,23 @@ if(_OSX_)
     set(CMAKE_MACOSX_RPATH ON)
 endif()
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} \
+    -fsanitize=address \
+    -fsanitize=bool \
+    -fsanitize=bounds \
+    -fsanitize=enum \
+    -fsanitize=float-cast-overflow \
+    -fsanitize=float-divide-by-zero \
+    -fsanitize=nonnull-attribute \
+    -fsanitize=returns-nonnull-attribute \
+    -fsanitize=signed-integer-overflow \
+    -fsanitize=undefined \
+    -fsanitize=vla-bound \
+    -fno-sanitize=alignment \
+    -fsanitize=leak \
+    -fsanitize=object-size \
+")
+
 # Overide with cmake -DCMAKE_BUILD_TYPE=Debug {dir}
 if( NOT CMAKE_BUILD_TYPE AND NOT _WIN_ )
    message("Build type not set (defaults to release)")
