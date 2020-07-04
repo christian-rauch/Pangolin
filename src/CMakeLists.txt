@@ -220,25 +220,19 @@ else()
                     pkg_check_modules(xkbcommon REQUIRED xkbcommon)
                     pkg_check_modules(egl QUIET egl)
 
-                    # find Wayland protocols
-                    pkg_get_variable(WAYLAND_PROTOCOLS_DIR wayland-protocols pkgdatadir)
+                    # fetch, build and install 'libdecor'
+                    include(ExternalProject)
+                    ExternalProject_Add(libdecor
+                        GIT_REPOSITORY https://gitlab.gnome.org/jadahl/libdecoration.git
+                        GIT_TAG master
+                        PREFIX "${CMAKE_CURRENT_BINARY_DIR}/extern/libdecor"
+                        CONFIGURE_COMMAND meson --prefix "${CMAKE_CURRENT_BINARY_DIR}/install" --libdir "lib" ../libdecor
+                        BUILD_COMMAND ninja
+                        INSTALL_COMMAND ninja install
+                    )
 
-                    # generate header for protocol 'xdg_shell'
-                    set(XDG_PROT_DEF "${WAYLAND_PROTOCOLS_DIR}/stable/xdg-shell/xdg-shell.xml")
-
-                    # find 'wayland-scanner' executable
-                    pkg_get_variable(WAYLAND_SCANNER wayland-scanner wayland_scanner)
-
-                    # generate protocol implementation
-                    add_custom_command(
-                        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-client-protocol.h
-                        COMMAND ${WAYLAND_SCANNER} client-header ${XDG_PROT_DEF} xdg-shell-client-protocol.h)
-                    add_custom_command(
-                        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-protocol.c
-                        COMMAND ${WAYLAND_SCANNER} private-code ${XDG_PROT_DEF} xdg-shell-protocol.c
-                        DEPENDS xdg-shell-client-protocol.h)
-                    include_directories(${CMAKE_CURRENT_BINARY_DIR})
-                    list(APPEND SOURCES xdg-shell-protocol.c)
+                    list(APPEND INTERNAL_INC "${CMAKE_CURRENT_BINARY_DIR}/install/include/libdecor-0.1")
+                    list(APPEND LINK_LIBS "${CMAKE_CURRENT_BINARY_DIR}/install/lib/libdecor-0.1${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
                     list(APPEND WINDOW_FACTORY_REG RegisterWaylandWindowFactory)
                     list(APPEND SOURCES display/device/display_wayland.cpp)
@@ -650,6 +644,10 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "/EHs ${CMAKE_CXX_FLAGS}")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "-Wall -Wno-error=deprecated-declarations ${CMAKE_CXX_FLAGS}")
+endif()
+
+if(DISPLAY_WAYLAND)
+    add_dependencies(${LIBRARY_NAME} libdecor)
 endif()
 
 #######################################################
