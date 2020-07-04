@@ -225,28 +225,20 @@ else()
 
                     # generate header for protocol 'xdg_shell'
                     set(XDG_PROT_DEF "${WAYLAND_PROTOCOLS_DIR}/stable/xdg-shell/xdg-shell.xml")
-                    if(EXISTS ${XDG_PROT_DEF})
-                        # use the 'xdg_shell' protocol
-                        add_definitions(-DUSE_WL_XDG=1)
 
-                        # find 'wayland-scanner' executable
-                        pkg_get_variable(WAYLAND_SCANNER wayland-scanner wayland_scanner)
+                    # find 'wayland-scanner' executable
+                    pkg_get_variable(WAYLAND_SCANNER wayland-scanner wayland_scanner)
 
-                        # generate protocol implementation
-                        add_custom_command(
-                            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-client-protocol.h
-                            COMMAND ${WAYLAND_SCANNER} client-header ${XDG_PROT_DEF} xdg-shell-client-protocol.h)
-                        add_custom_command(
-                            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-protocol.c
-                            COMMAND ${WAYLAND_SCANNER} private-code ${XDG_PROT_DEF} xdg-shell-protocol.c
-                            DEPENDS xdg-shell-client-protocol.h)
-                        include_directories(${CMAKE_CURRENT_BINARY_DIR})
-                        list(APPEND SOURCES xdg-shell-protocol.c)
-
-                    else()
-                        # use deprecated 'wl_shell' interface
-                        add_definitions(-DUSE_WL_XDG=0)
-                    endif()
+                    # generate protocol implementation
+                    add_custom_command(
+                        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-client-protocol.h
+                        COMMAND ${WAYLAND_SCANNER} client-header ${XDG_PROT_DEF} xdg-shell-client-protocol.h)
+                    add_custom_command(
+                        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/xdg-shell-protocol.c
+                        COMMAND ${WAYLAND_SCANNER} private-code ${XDG_PROT_DEF} xdg-shell-protocol.c
+                        DEPENDS xdg-shell-client-protocol.h)
+                    include_directories(${CMAKE_CURRENT_BINARY_DIR})
+                    list(APPEND SOURCES xdg-shell-protocol.c)
 
                     list(APPEND WINDOW_FACTORY_REG RegisterWaylandWindowFactory)
                     list(APPEND SOURCES display/device/display_wayland.cpp)
