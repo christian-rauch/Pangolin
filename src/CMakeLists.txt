@@ -218,7 +218,14 @@ else()
                     find_package(Wayland REQUIRED)
                     find_package(PkgConfig)
                     pkg_check_modules(xkbcommon REQUIRED xkbcommon)
-                    pkg_check_modules(egl QUIET egl)
+                    pkg_check_modules(egl REQUIRED egl)
+
+                    pkg_check_modules(dbus QUIET dbus-1)
+                    if(dbus_FOUND)
+                        list(APPEND INTERNAL_INC ${dbus_INCLUDE_DIRS})
+                        list(APPEND LINK_LIBS ${dbus_LIBRARIES})
+                        add_definitions(-DHAS_DBUS)
+                    endif()
 
                     # fetch, build and install 'libdecor'
                     include(ExternalProject)

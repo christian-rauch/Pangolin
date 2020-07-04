@@ -19,6 +19,9 @@
 #include <cstdlib>
 
 #include <libdecor.h>
+#ifdef HAS_DBUS
+#include "cursor-settings.h"
+#endif
 
 #define WAYLAND_VERSION_GE(MAJ, MIN) WAYLAND_VERSION_MAJOR >= MAJ && WAYLAND_VERSION_MINOR >= MIN
 
@@ -55,6 +58,8 @@ struct WaylandDisplay {
     struct wl_shm *shm = nullptr;
     struct wl_cursor_theme *cursor_theme = nullptr;
     struct wl_surface *cursor_surface = nullptr;
+    char *cursor_theme_name;
+    int cursor_size;
 
     // xkbcommon
     struct xkb_context *xkb_context = nullptr;
@@ -391,7 +396,7 @@ static void global_registry_handler(void *data, struct wl_registry *registry, ui
     }
     else if (strcmp(interface, wl_shm_interface.name) == 0) {
         w->shm = static_cast<wl_shm*>(wl_registry_bind(registry, id, &wl_shm_interface, version));
-        w->cursor_theme = wl_cursor_theme_load(nullptr, 16, w->shm);
+        w->cursor_theme = wl_cursor_theme_load(w->cursor_theme_name, w->cursor_size, w->shm);
     }
 }
 
@@ -404,6 +409,19 @@ static const struct wl_registry_listener wregistry_listener = {
 
 WaylandDisplay::WaylandDisplay() {
     xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+
+    // get cursor theme name and size via D-Bus
+    if(
+#ifdef HAS_DBUS
+            !get_cursor_settings(&cursor_theme_name, &cursor_size)
+#else
+            false
+#endif
+            ) {
+        cursor_theme_name = nullptr;
+        cursor_size = 24;
+    }
+
 
     wdisplay = wl_display_connect(nullptr);
     if (wdisplay == nullptr) {
@@ -450,6 +468,8 @@ WaylandDisplay::~WaylandDisplay() {
     if(xkb_context)     xkb_context_unref(xkb_context);
     if(keymap)          xkb_keymap_unref(keymap);
     if(xkb_state)       xkb_state_unref(xkb_state);
+
+    free(cursor_theme_name);
 }
 
 WaylandWindow::WaylandWindow(const int width, const int height, const std::string title, std::unique_ptr<WaylandDisplay> display_uptr) : display(std::move(display_uptr)){
