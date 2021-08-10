@@ -244,10 +244,11 @@ X11GlContext::X11GlContext(std::shared_ptr<X11Display>& xdisplay) : display(xdis
 X11GlContext::~X11GlContext()
 {
     // cleanup EGL
-    eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-    if(egl_context) eglDestroyContext(egl_display, egl_context);
-    if(egl_surface) eglDestroySurface(egl_display, egl_surface);
-    if(egl_display) eglTerminate(egl_display);
+    // TODO: this causes crashes, comment out for now
+//    eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+//    if(egl_context) eglDestroyContext(egl_display, egl_context);
+//    if(egl_surface) eglDestroySurface(egl_display, egl_surface);
+//    if(egl_display) eglTerminate(egl_display);
 }
 
 X11Window::X11Window(
