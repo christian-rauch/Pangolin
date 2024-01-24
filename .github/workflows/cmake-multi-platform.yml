@@ -39,6 +39,12 @@ jobs:
           - os: macos-latest
             c_compiler: gcc
             cpp_compiler: g++
+          - os: ubuntu-latest
+            pkg_manager: "apt"
+          - os: windows-latest
+            pkg_manager: "vcpkg"
+          - os: macos-latest
+            pkg_manager: "brew"
         exclude:
           - os: ubuntu-latest
             c_compiler: cl
@@ -63,6 +69,8 @@ jobs:
         python-version: '3.10'
 
     - run: pip install numpy
+
+    - run: ./scripts/install_prerequisites.sh -v -u -m ${{ matrix.pkg_manager }} all
 
     - name: Configure CMake
       run: >
