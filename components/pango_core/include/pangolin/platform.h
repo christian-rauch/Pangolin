@@ -42,7 +42,8 @@
 
 #ifdef _MSC_VER
 #   define __thread __declspec(thread)
-#   include <pangolin/pangolin_export.h>
+// #   include <pangolin/pangolin_export.h>
+#   define PANGOLIN_EXPORT
 #else
 #   define PANGOLIN_EXPORT
 #endif //_MSVC_

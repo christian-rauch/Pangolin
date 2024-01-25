@@ -52,22 +52,22 @@ if(Threads_FOUND)
 endif()
 
 ## Generate symbol export helper header on MSVC
-IF(MSVC)
-    include(GenerateExportHeader)
-    GENERATE_EXPORT_HEADER( ${COMPONENT}
-        BASE_NAME PANGOLIN
-        EXPORT_MACRO_NAME PANGOLIN_EXPORT
-        EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/include/pangolin/pangolin_export.h"
-        STATIC_DEFINE PANGOLIN_BUILT_AS_STATIC
-    )
-    target_include_directories(${COMPONENT} PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-    )
-    install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include"
-      DESTINATION ${CMAKE_INSTALL_PREFIX}
-    )
-ENDIF()
+# IF(MSVC)
+#     include(GenerateExportHeader)
+#     GENERATE_EXPORT_HEADER( ${COMPONENT}
+#         BASE_NAME PANGOLIN
+#         EXPORT_MACRO_NAME PANGOLIN_EXPORT
+#         EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/include/pangolin/pangolin_export.h"
+#         STATIC_DEFINE PANGOLIN_BUILT_AS_STATIC
+#     )
+#     target_include_directories(${COMPONENT} PUBLIC
+#         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+#         $<INSTALL_INTERFACE:include>
+#     )
+#     install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include"
+#       DESTINATION ${CMAKE_INSTALL_PREFIX}
+#     )
+# ENDIF()
 
 if(BUILD_TESTS)
     add_executable(test_uris ${CMAKE_CURRENT_LIST_DIR}/tests/tests_uri.cpp)
