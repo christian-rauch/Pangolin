@@ -18,6 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04, macos-13, windows-2022]
         shared_libs: ['ON', 'OFF']
+        UVC_MEDIAFOUNDATION: ['ON', 'OFF']
         include:
         - os: ubuntu-22.04
           package_manager: "apt"
@@ -72,6 +73,7 @@ jobs:
         -D CMAKE_BUILD_TYPE=$BUILD_TYPE
         -D CMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE"
         -D BUILD_SHARED_LIBS=${{ matrix.shared_libs }}
+        -D BUILD_PANGOLIN_UVC_MEDIAFOUNDATION=${{ matrix.UVC_MEDIAFOUNDATION }}
         -D BUILD_TESTS=${{matrix.test}}
 
     - name: Build
