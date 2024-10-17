@@ -51,6 +51,11 @@ jobs:
       with:
         vcpkgDirectory: '${{github.workspace}}/scripts/vcpkg'
 
+    - name: "(vcpkg only) setuptools"
+      if: ${{ matrix.package_manager == 'vcpkg' }}
+      run: |
+        pip install setuptools
+
     - name: "(vcpkg only) Setup CMake Toolchain file"
       if: ${{ matrix.package_manager == 'vcpkg' }}
       run: |
