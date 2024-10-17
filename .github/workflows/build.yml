@@ -54,7 +54,8 @@ jobs:
     - name: "(vcpkg only) setuptools"
       if: ${{ matrix.package_manager == 'vcpkg' }}
       run: |
-        pip install setuptools
+        pip show setuptools
+        python -c "import setuptools"
 
     - name: "(vcpkg only) Setup CMake Toolchain file"
       if: ${{ matrix.package_manager == 'vcpkg' }}
