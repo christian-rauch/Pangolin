@@ -256,7 +256,7 @@ std::string PathExpand(const std::string& sPath)
         WCHAR path[MAX_PATH];
         if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, path))) {
             std::wstring ws(path);
-            sHomeDir = std::string(ws.begin(), ws.end());
+            sHomeDir = ws2s(ws);
         }
 #else
         std::string sHomeDir = std::string(getenv("HOME"));
