@@ -76,6 +76,25 @@
 namespace pangolin
 {
 
+#ifdef UNICODE
+typedef std::codecvt_utf8<wchar_t> WinStringConvert;
+typedef std::wstring WinString;
+
+WinString s2ws(const std::string& str) {
+    std::wstring_convert<WinStringConvert, wchar_t> converter;
+    return converter.from_bytes(str);
+}
+std::string ws2s(const WinString& wstr) {
+    std::wstring_convert<WinStringConvert, wchar_t> converter;
+    return converter.to_bytes(wstr);
+}
+#else
+typedef std::string WinString;
+// No conversions necessary
+#   define s2ws(X) (X)
+#   define ws2s(X) (X)
+#endif // UNICODE
+
 std::vector<std::string>& Split(const std::string& s, char delim, std::vector<std::string>& elements) {
     std::stringstream ss(s);
     std::string item;
@@ -410,25 +429,6 @@ void FlushPipe(const std::string& file)
 }
 
 #ifdef _WIN_
-
-#ifdef UNICODE
-    typedef std::codecvt_utf8<wchar_t> WinStringConvert;
-    typedef std::wstring WinString;
-
-    WinString s2ws(const std::string& str) {
-        std::wstring_convert<WinStringConvert, wchar_t> converter;
-        return converter.from_bytes(str);
-    }
-    std::string ws2s(const WinString& wstr) {
-        std::wstring_convert<WinStringConvert, wchar_t> converter;
-        return converter.to_bytes(wstr);
-    }
-#else
-    typedef std::string WinString;
-    // No conversions necessary
-#   define s2ws(X) (X)
-#   define ws2s(X) (X)
-#endif // UNICODE
 
 bool FilesMatchingWildcard(const std::string& wildcard, std::vector<std::string>& file_vec, 
     SortMethod sort_method )
